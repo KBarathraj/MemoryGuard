@@ -26,11 +26,11 @@ class AnomalyResult:
 def _clamp_z(z: float, cap: float = 4.0) -> float:
     """Normalise a raw Z-score into the [0, 1] range.
 
-    ``min(|z| / cap, 1.0)``
+    ``min(max(z, 0.0) / cap, 1.0)``
 
     A *cap* of 4.0 means any Z ≥ 4 saturates at 1.0.
     """
-    return min(abs(z) / cap, 1.0)
+    return min(max(z, 0.0) / cap, 1.0)
 
 
 def compute_anomaly(

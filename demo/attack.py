@@ -69,10 +69,11 @@ def run_demo() -> None:
     _banner("PHASE 1 — Normal behaviour (building baseline)")
     for i, sql in enumerate(NORMAL_QUERIES, 1):
         fp = parse_sql(sql)
-        store.record(user, fp)
 
         known_cols = store.get_known_columns(user)
         query_cols = set(fp.columns)
+
+        store.record(user, fp)
         # Use a synthetic daily count history (stable)
         history = [len(NORMAL_QUERIES)] * 10
         current = i
@@ -95,10 +96,10 @@ def run_demo() -> None:
         except ValueError:
             print(f"  [SKIP] unparseable: {sql[:60]}")
             continue
-        store.record(user, fp)
-
         known_cols = store.get_known_columns(user)
         query_cols = set(fp.columns)
+
+        store.record(user, fp)
         history = [len(NORMAL_QUERIES)] * 10
         current = len(NORMAL_QUERIES) + 5
 
@@ -119,10 +120,11 @@ def run_demo() -> None:
     _banner("PHASE 3 — Data exfiltration (sensitive data + volume spike)")
     for sql in EXFIL_QUERIES:
         fp = parse_sql(sql)
-        store.record(user, fp)
 
         known_cols = store.get_known_columns(user)
         query_cols = set(fp.columns)
+
+        store.record(user, fp)
         # Simulate massive volume spike
         history = [len(NORMAL_QUERIES)] * 10
         current = len(NORMAL_QUERIES) + len(RECON_QUERIES) + len(EXFIL_QUERIES)
