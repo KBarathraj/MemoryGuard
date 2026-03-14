@@ -5,8 +5,19 @@
 MemoryGuard watches your database's query patterns, builds a behavioral profile, and alerts you the moment something drifts — *before* data is exfiltrated. Built to catch compromised application users acting out of character.
 
 ---
+## Why It Matters
 
-## 🏎️ Hackathon Judges: Run the Demo!
+| | |
+|---|---|
+| **216 days** | Average insider dwell time before detection (IBM 2023) |
+| **$16.2M** | Average cost per insider threat incident (Ponemon) |
+| **0** | Lines of application code you need to change |
+
+Existing tools (Splunk, CrowdStrike, Varonis) score individual queries.
+MemoryGuard scores **stories** — patterns unfolding over weeks.
+
+
+## Run the Demo!
 
 Want to see MemoryGuard in action? We've built an interactive attack simulation that demonstrates how the engine distinguishes between normal app behavior and an active reconnaissance/exfiltration attack.
 
@@ -75,5 +86,7 @@ memoryguard/
 └── demo/               # The attack simulation
 ```
 
-## License
-MIT
+> MemoryGuard applies the long-context memory architecture behind
+> large language models to database security — maintaining a 90-day
+> behavioral window per user, just as an LLM maintains context
+> across thousands of tokens to understand intent.
