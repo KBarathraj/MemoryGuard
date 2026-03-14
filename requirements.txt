@@ -1,0 +1,11 @@
+# Core
+sqlglot>=20.0
+redis>=5.0
+requests>=2.31
+
+# Config
+python-dotenv>=1.0
+
+# Testing
+fakeredis>=2.20
+pytest>=8.0

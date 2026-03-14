@@ -1,0 +1,59 @@
+# MemoryGuard — Docker Compose
+# Postgres (pg_audit) + Redis + MemoryGuard pipeline
+
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: mgdemo
+      POSTGRES_PASSWORD: mgdemo
+      POSTGRES_DB: mgdemo
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./demo/seed.sql:/docker-entrypoint-initdb.d/seed.sql
+    command: >
+      postgres
+        -c shared_preload_libraries=pgaudit
+        -c pgaudit.log=all
+        -c pgaudit.log_catalog=off
+        -c log_destination=csvlog
+        -c logging_collector=on
+        -c log_directory=/var/log/postgresql
+        -c log_filename=audit.csv
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mgdemo"]
+      interval: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      retries: 5
+
+  memoryguard:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      PG_AUDIT_LOG: /var/log/postgresql/audit.csv
+      ANOMALY_THRESHOLD: "0.7"
+      Z_WEIGHT: "0.6"
+      J_WEIGHT: "0.4"
+    volumes:
+      - pg_logs:/var/log/postgresql:ro
+
+volumes:
+  pg_data:
+  pg_logs:
